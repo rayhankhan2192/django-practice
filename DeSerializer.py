@@ -1,6 +1,7 @@
 import requests, json
 
 #API access on ThirtPartyApps
+#Insert to Database
 
 URL = 'http://127.0.0.1:8000/arena/info/'
 

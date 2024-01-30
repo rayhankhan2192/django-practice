@@ -36,22 +36,49 @@ def Teachers_(request, primarykey):
 
 @csrf_exempt
 def Tacher_create(request):
+    #Insert valu into database
     if request.method == 'POST':
         json_data = request.body
-        
         #Json to Stream convert
         stream = io.BytesIO(json_data)
-        
         #Stream to Python convert
         python_data = JSONParser().parse(stream)
-        
-        #python to Complex Data
+        #python to Complex data
         serializer = TeacherSerializers(data=python_data)
         if serializer.is_valid():
             serializer.save()
             rs = {'msg': 'Successfully inserted'}
             json_dataa = JSONRenderer().render(rs)
             return HttpResponse(json_dataa, content_type = 'application/json')
-        
         json_datas = JSONRenderer().render(serializer.errors)
         return HttpResponse(json_datas, content_type = 'application/json')
+    
+    #Update value
+    if request.method == 'PUT':
+        json_data = request.body
+        #json to stream
+        stream = io.BytesIO(json_data)
+        #stream to python
+        python_data = JSONParser().parse(stream)
+        id = python_data.get('id')
+        data_ = Teacher.objects.get(id = id)
+        serializer = TeacherSerializers(data_, data=python_data, partial = True) #partial = False means it will update hole rows with new values
+        if serializer.is_valid():
+            serializer.save()
+            rs = {'msg': 'Successfully Updated'}
+            json_dataa = JSONRenderer().render(rs)
+            return HttpResponse(json_dataa, content_type = 'application/json')
+        json_datas = JSONRenderer().render(serializer.errors)
+        return HttpResponse(json_datas, content_type = 'application/json')
+    
+    #Delete value
+    if request.method == 'DELETE':
+        json_data = request.body
+        stream  = io.BytesIO(json_data)
+        python_data = JSONParser().parse(stream)
+        id = python_data.get('id')
+        data_ = Teacher.objects.get(id = id)
+        data_.delete()
+        rs = {'msg': 'Successfully Deleted'}
+        json_dataa = JSONRenderer().render(rs)
+        return HttpResponse(json_dataa, content_type = 'application.json')
