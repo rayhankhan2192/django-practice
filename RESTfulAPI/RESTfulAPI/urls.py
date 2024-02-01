@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     #path('details/', views.Teachers_Info),
-    path('arena/', include('arena.urls'))
+    path('arena/', include('arena.urls')),
+    path('', include('arena.urls'))
 ]
